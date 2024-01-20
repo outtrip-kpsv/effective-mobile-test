@@ -1,0 +1,201 @@
+definitions:
+  models.ErrResp:
+    properties:
+      err:
+        type: string
+    type: object
+  models.OkResp:
+    properties:
+      msg:
+        type: string
+    type: object
+  models.People:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/repo.Person'
+        type: array
+      limit:
+        type: integer
+      next_page:
+        type: integer
+      page:
+        type: integer
+      prev_page:
+        type: integer
+      total_count:
+        type: integer
+    type: object
+  repo.Person:
+    properties:
+      age:
+        type: integer
+      country_id:
+        type: string
+      gender:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      patronymic:
+        type: string
+      surname:
+        type: string
+    required:
+    - name
+    type: object
+info:
+  contact: {}
+paths:
+  /create:
+    post:
+      consumes:
+      - application/json
+      description: Создать нового человека с возможностью обогащения данных из API
+      parameters:
+      - description: Данные нового человека
+        in: body
+        name: person
+        required: true
+        schema:
+          $ref: '#/definitions/repo.Person'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/repo.Person'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrResp'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrResp'
+      tags:
+      - People
+  /del/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удалить человека по указанному идентификатору
+      parameters:
+      - description: Идентификатор человека
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.OkResp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrResp'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrResp'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrResp'
+      tags:
+      - People
+  /people:
+    get:
+      consumes:
+      - application/json
+      description: Получить список людей с возможностью фильтрации и пагинации
+      parameters:
+      - description: Имя
+        in: query
+        name: name
+        type: string
+      - description: Фамилия
+        in: query
+        name: surname
+        type: string
+      - description: Отчество
+        in: query
+        name: patronymic
+        type: string
+      - description: Возраст
+        in: query
+        name: age
+        type: integer
+      - description: Пол
+        in: query
+        name: gender
+        type: string
+      - description: Идентификатор страны
+        in: query
+        name: country_id
+        type: string
+      - description: Номер страницы
+        in: query
+        name: page
+        type: integer
+      - description: Размер страницы
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.People'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrResp'
+      tags:
+      - response.Peopdle
+  /update/{id}:
+    patch:
+      consumes:
+      - application/json
+      description: Обновить информацию о человеке по указанному идентификатору
+      parameters:
+      - description: Идентификатор человека
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Обновленные данные человека
+        in: body
+        name: person
+        required: true
+        schema:
+          $ref: '#/definitions/repo.Person'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.OkResp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrResp'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrResp'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrResp'
+      tags:
+      - People
+swagger: "2.0"

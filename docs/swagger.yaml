@@ -47,6 +47,11 @@ definitions:
     type: object
 info:
   contact: {}
+  description: Реализовать сервис, который будет получать по апи ФИО, из открытых
+    апи обогащать ответ наиболее вероятными возрастом, полом и национальностью и сохранять
+    данные в БД. По запросу выдавать инфу о найденных людях.
+  title: Effective Mobile API
+  version: "1.0"
 paths:
   /create:
     post:
@@ -159,7 +164,7 @@ paths:
           schema:
             $ref: '#/definitions/models.ErrResp'
       tags:
-      - response.Peopdle
+      - People
   /update/{id}:
     patch:
       consumes:

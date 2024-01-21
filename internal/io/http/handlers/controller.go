@@ -23,7 +23,7 @@ func NewController(bl *bl.BL, logger *zap.Logger) *Controller {
 
 // GetPeople @Summary Получить список людей
 // @Description Получить список людей с возможностью фильтрации и пагинации
-// @Tags response.Peopdle
+// @Tags People
 // @Accept json
 // @Produce json
 // @Param name query string false "Имя"
@@ -93,12 +93,12 @@ func (ct *Controller) GetPeople(c *fiber.Ctx) error {
 func (ct *Controller) CreatePerson(c *fiber.Ctx) error {
 	ct.logger.Info("CreatePerson", zap.String("fiberCtx", c.String()))
 
-	var person, personNil repo.Person
+	var person repo.Person
 	if err := c.BodyParser(&person); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrResp{Err: "Неверный формат данных"})
 	}
-	//todo to bl
-	if person == personNil && len(person.Name) != 0 {
+
+	if len(person.Name) == 0 {
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrResp{Err: "пустой запрос"})
 	}
 
@@ -106,7 +106,7 @@ func (ct *Controller) CreatePerson(c *fiber.Ctx) error {
 	person.ID = 0
 	err := ct.bl.Db.People.AddPerson(&person)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString("Ошибка при добавлении человека в базу данных")
+		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrResp{Err: "Ошибка при добавлении человека в базу данных"})
 	}
 	return c.JSON(person)
 }

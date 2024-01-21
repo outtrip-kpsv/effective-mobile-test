@@ -1,7 +1,10 @@
 {
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "description": "Реализовать сервис, который будет получать по апи ФИО, из открытых апи обогащать ответ наиболее вероятными возрастом, полом и национальностью и сохранять данные в БД. По запросу выдавать инфу о найденных людях.",
+        "title": "Effective Mobile API",
+        "contact": {},
+        "version": "1.0"
     },
     "paths": {
         "/create": {
@@ -108,7 +111,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "response.Peopdle"
+                    "People"
                 ],
                 "parameters": [
                     {
